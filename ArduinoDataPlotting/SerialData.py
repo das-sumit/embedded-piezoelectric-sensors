@@ -1,24 +1,16 @@
 import serial
-import matplotlib.pyplot as plt
-import numpy as np
 
-plt.ion()
-fig = plt.figure()
+arduino = serial.Serial('COM7', 115200)
+arduino.close()
+arduino.open()
 
-i = 0
-x = list()
-y = list()
-ser = serial.Serial('COM14', 9600)
-ser.close()
-ser.open()
+file = open("Voltage_Data.txt", "a")
+file.write("Strain Gauge Voltage Data File")
+file.close()
 
 while True:
-    data = ser.readline()
-    print(data.decode())
-    x.append(i)
-    y.append(data.decode())
-
-    plt.scatter(i, float(data.decode()))
-    i += 1
-    plt.show()
-    plt.pause(0.0001)
+    data = arduino.readline()
+    data_str = str(data.decode()).replace("\n", "")     # decodes, type casts, and removes the new line character
+    file = open("Voltage_Data.txt", "a")                # open file in same directory as this file in append mode
+    file.write(data_str)
+    file.close()
